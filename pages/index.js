@@ -1,6 +1,15 @@
 import Head from 'next/head'
+import firebase from 'firebase';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [name, setName] = useState("");
+  useEffect(() => {
+    const db = firebase.firestore();
+    db.collection("data").get().then( snapshot => {
+      setName(snapshot.docs[0].data()["name"])
+    })
+  }, [])
   return (
     <div className="container">
       <Head>
@@ -12,6 +21,9 @@ export default function Home() {
         <h1 className="title">
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+        {name && <h2>
+          Your name is {name}
+        </h2>}
 
         <p className="description">
           Get started by editing <code>pages/index.js</code>
